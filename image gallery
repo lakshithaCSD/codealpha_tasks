@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Calculator & Gallery</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ffc0cb; /* baby pink */
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: purple;
+      font-family: initial;
+      font-size: 50px;
+      margin: 20px 0;
+    }
+
+    /* Calculator Styles */
+    .calculator {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      width: 320px;
+      margin-bottom: 50px;
+    }
+
+    .display {
+      background-color: #2f3542;
+      color: #ffffff;
+      font-size: 2.5rem;
+      padding: 20px;
+      text-align: right;
+    }
+
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+    }
+
+    button {
+      background-color: #f1f2f6;
+      border: none;
+      font-size: 1.5rem;
+      padding: 20px;
+      transition: background-color 0.3s ease;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #dcdde1;
+    }
+
+    .operator {
+      background-color: #ff6b81;
+      color: #fff;
+    }
+
+    .operator:hover {
+      background-color: #ff4757;
+    }
+
+    .equal {
+      background-color: #2ed573;
+      color: #fff;
+      grid-column: span 2;
+    }
+
+    .equal:hover {
+      background-color: #20bf6b;
+    }
+
+    .clear {
+      background-color: #ffa502;
+      color: #fff;
+    }
+
+    .clear:hover {
+      background-color: #e1a70a;
+    }
+
+    /* Gallery */
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      padding: 20px;
+      justify-items: center;
+    }
+
+    .thumbnail {
+      position: relative;
+      width: 90%;
+      text-align: center;
+      overflow: hidden;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    .thumbnail img {
+      width: 100%;
+      display: block;
+      border-radius: 10px;
+    }
+
+    .hover-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      color: white;
+      background: rgba(0, 0, 0, 0.6);
+      padding: 10px 20px;
+      font-size: 18px;
+      border-radius: 8px;
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .thumbnail:hover .hover-text {
+      opacity: 1;
+    }
+
+    .lightbox {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      z-index: 1000;
+    }
+
+    .lightbox-img {
+      max-width: 90%;
+      max-height: 80%;
+      border-radius: 10px;
+    }
+
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      font-size: 40px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .nav span {
+      cursor: pointer;
+      font-size: 50px;
+      margin: 20px;
+      user-select: none;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Calculator</h1>
+  <div class="calculator">
+    <div class="display" id="display">0</div>
+    <div class="buttons">
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button onclick="appendValue('(')">(</button>
+      <button onclick="appendValue(')')">)</button>
+      <button class="operator" onclick="appendOperator('/')">÷</button>
+      <button onclick="appendValue('7')">7</button>
+      <button onclick="appendValue('8')">8</button>
+      <button onclick="appendValue('9')">9</button>
+      <button class="operator" onclick="appendOperator('*')">×</button>
+      <button onclick="appendValue('4')">4</button>
+      <button onclick="appendValue('5')">5</button>
+      <button onclick="appendValue('6')">6</button>
+      <button class="operator" onclick="appendOperator('-')">−</button>
+      <button onclick="appendValue('1')">1</button>
+      <button onclick="appendValue('2')">2</button>
+      <button onclick="appendValue('3')">3</button>
+      <button class="operator" onclick="appendOperator('+')">+</button>
+      <button onclick="appendValue('0')">0</button>
+      <button onclick="appendValue('.')">.</button>
+      <button class="equal" onclick="calculate()">=</button>
+    </div>
+  </div>
+
+  <h1>Image Gallery</h1>
+  <div class="gallery">
+    <div class="thumbnail gallery-item"><img src="https://via.placeholder.com/300" alt=""><div class="hover-text">Image 1</div></div>
+    <div class="thumbnail gallery-item"><img src="https://via.placeholder.com/301" alt=""><div class="hover-text">Image 2</div></div>
+    <div class="thumbnail gallery-item"><img src="https://via.placeholder.com/302" alt=""><div class="hover-text">Image 3</div></div>
+    <div class="thumbnail gallery-item"><img src="https://via.placeholder.com/303" alt=""><div class="hover-text">Image 4</div></div>
+  </div>
+
+  <div class="lightbox" id="lightbox">
+    <span class="close" id="closeBtn">&times;</span>
+    <img src="" class="lightbox-img" id="lightboxImg" />
+    <div class="nav">
+      <span id="prevBtn">&#10094;</span>
+      <span id="nextBtn">&#10095;</span>
+    </div>
+  </div>
+
+  <script>
+    // Calculator
+    const display = document.getElementById('display');
+    let expression = '';
+
+    function appendValue(value) {
+      if (display.innerText === '0') expression = '';
+      expression += value;
+      display.innerText = expression;
+    }
+
+    function appendOperator(operator) {
+      if (expression === '') return;
+      const lastChar = expression.slice(-1);
+      if ('+-*/'.includes(lastChar)) {
+        expression = expression.slice(0, -1) + operator;
+      } else {
+        expression += operator;
+      }
+      display.innerText = expression;
+    }
+
+    function clearDisplay() {
+      expression = '';
+      display.innerText = '0';
+    }
+
+    function calculate() {
+      try {
+        const result = eval(expression);
+        display.innerText = result;
+        expression = result.toString();
+      } catch {
+        display.innerText = 'Error';
+        expression = '';
+      }
+    }
+
+    document.addEventListener('keydown', (event) => {
+      const key = event.key;
+      if ((key >= '0' && key <= '9') || key === '.' || key === '(' || key === ')') {
+        appendValue(key);
+      } else if (['+', '-', '*', '/'].includes(key)) {
+        appendOperator(key);
+      } else if (key === 'Enter') {
+        calculate();
+      } else if (key === 'Backspace') {
+        expression = expression.slice(0, -1);
+        display.innerText = expression || '0';
+      } else if (key.toLowerCase() === 'c') {
+        clearDisplay();
+      }
+    });
+
+    // Gallery Lightbox
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+    const lightbox = document.getElementById('lightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const closeBtn = document.getElementById('closeBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    const images = Array.from(galleryItems).map(img => img.src);
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = index;
+      lightboxImg.src = images[currentIndex];
+      lightbox.style.display = 'flex';
+    }
+
+    function closeLightbox() {
+      lightbox.style.display = 'none';
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      lightboxImg.src = images[currentIndex];
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % images.length;
+      lightboxImg.src = images[currentIndex];
+    }
+
+    galleryItems.forEach((img, index) => {
+      img.addEventListener('click', () => openLightbox(index));
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', showPrev);
+    nextBtn.addEventListener('click', showNext);
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.style.display === 'flex') {
+        if (e.key === 'ArrowLeft') showPrev();
+        if (e.key === 'ArrowRight') showNext();
+        if (e.key === 'Escape') closeLightbox();
+      }
+    });
+  </script>
+</body>
+</html>
